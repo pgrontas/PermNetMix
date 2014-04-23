@@ -4,8 +4,15 @@ module Common =
 
     open System.Security.Cryptography
     open System.Numerics
-    open CryptoLib.MillerRabin
-    
+    open CryptoLib.MillerRabin 
+     
+    let closestPowerOf2 n =
+        let x = System.Math.Log(float n,2.0)
+        if System.Math.Floor(x) = System.Math.Ceiling(x) then
+            n
+        else
+            int(System.Math.Pow(2.0,System.Math.Ceiling(x)))
+
     let show x = printfn "%A" x
 
     let zip4 s1 s2 s3 s4 = Seq.map2 (fun (a,b)(c,d) ->a,b,c,d) (Seq.zip s1 s2)(Seq.zip s3 s4)            

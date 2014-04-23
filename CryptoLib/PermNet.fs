@@ -59,15 +59,14 @@ module PermNet =
             (rc1,rc2), (pep,dpep)
         else
             (rc2,rc1), (pep,dpep)
-    
    
-    let rec permNet(ls, pk)=  
+
+    let rec permNet(ls, pk)=   
         let n = ls|>List.length
         if n = 2 then
             let (c1,c2),(p1,p2) = switchingGate ls.[0] ls.[1] pk
             [c1;c2],[(p1,p2)]
-        else
-            let x = System.Math.Log(float n,2.0)
+        else      
             let (ls1,ls2) = splitList ls 
             let ls1', proofs1 = permNet(ls1,pk) 
             let ls2', proofs2 = permNet(ls2,pk) 

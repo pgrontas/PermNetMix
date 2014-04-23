@@ -88,7 +88,7 @@ namespace MixServer
 
         private void initDB()
         {
-            var connString = @"Data Source=C:\Users\Panagiotis\Dropbox\Universities\ΜΠΛΑ\Διπλωματική\Code\Millimix\Millimix\bb.db;Version=3;";
+            var connString = @"Data Source=C:\Users\Panagiotis\Dropbox\Universities\ΜΠΛΑ\Διπλωματική\Code\MixPerm\MixPerm\bb.db;Version=3;";
             dbConn = new SQLiteConnection(connString);
             dbConn.Open();
 
@@ -386,9 +386,32 @@ namespace MixServer
             }
             else //this is the first mix server
             {
+                var n = 0;
                 log("Preparing for Mix Stage 1");
-                var sql = "select CipherG,CipherM from Votes where electionID = @Eid";
+                var sql = "select count(*) as total from Votes where electionID = @Eid";
                 var command = new SQLiteCommand(sql, dbConn);
+                command.Parameters.AddWithValue("@Eid", electionID);
+                
+                n = Int32.Parse (command.ExecuteScalar().ToString());
+                var n1 = Common.closestPowerOf2(n);
+                if (n != n1)
+                {
+                    sql = "select max(value) from electionOptions where electionID = @Eid";
+                    command = new SQLiteCommand(sql, dbConn);
+                    command.Parameters.AddWithValue("@Eid", electionID);
+                    var mx = Int32.Parse (command.ExecuteScalar().ToString());
+                    var rnd = new Random();
+                    log("Inserting Dummy Votes");
+                    for (int i = n + 1; i <= n1; i++)
+                    {
+                        var r = rnd.Next(mx+1,mx+n1-n);
+                        var c = doEncrypt(r);
+                        doInsertVote(c);
+                    }
+                }
+
+                sql = "select CipherG,CipherM from Votes where electionID = @Eid";
+                command = new SQLiteCommand(sql, dbConn);
                 command.Parameters.AddWithValue("@Eid", electionID);
                 var reader = command.ExecuteReader();
                 var ls = new List<Tuple<BigInteger, BigInteger>>();
@@ -397,10 +420,14 @@ namespace MixServer
                     var t = Tuple.Create<BigInteger, BigInteger>(BigInteger.Parse(reader["CipherG"].ToString()),  BigInteger.Parse(reader["CipherM"].ToString()));
                     ls.Add(t);
                 }
+              
+                
                 log("Retrieved " + ls.Count + " Votes");
                 return ls;
             }
         }
+
+       
 
         private int getMixStage()
         {
@@ -458,7 +485,8 @@ namespace MixServer
             {
                 var m = (int)eg.Decrypt(vote, sk);
                 log("Decrypted vote " + vote + " to " + m);
-                counters[m]++;
+                if (counters.ContainsKey(m))
+                    counters[m]++;
             }
 
             foreach (var res in counters)

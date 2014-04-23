@@ -112,7 +112,7 @@
             this.MinimizeBox = false;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Millimix Server";
+            this.Text = "MixPerm Server";
             this.ResumeLayout(false);
             this.PerformLayout();
 

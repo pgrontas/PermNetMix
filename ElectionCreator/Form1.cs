@@ -46,7 +46,7 @@ namespace ElectionCreator
         SQLiteConnection dbConn;
         private void initDB()
         {
-            var connString = @"Data Source=C:\Users\Panagiotis\Dropbox\Universities\ΜΠΛΑ\Διπλωματική\Code\Millimix\Millimix\bb.db;Version=3;";
+            var connString = @"Data Source=C:\Users\Panagiotis\Dropbox\Universities\ΜΠΛΑ\Διπλωματική\Code\MixPerm\MixPerm\bb.db;Version=3;";
             dbConn = new SQLiteConnection(connString);
             dbConn.Open();
         }

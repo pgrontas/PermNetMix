@@ -50,6 +50,6 @@ let testn n =
     let rnd = new System.Random()
     let ls = List.init n (fun _ -> getRandom(1024I))
     let cs = ls|>List.map (fun m -> eg.Encrypt(m,pk))
-    let cs',proofs = permNet cs pk
+    let cs',proofs = PEProof cs pk
     let ls' = cs'|>List.map (fun c -> eg.Decrypt(c,sk))
     printfn "%A" (ls,ls')
