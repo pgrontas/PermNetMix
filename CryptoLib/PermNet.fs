@@ -67,6 +67,7 @@ module PermNet =
             let (c1,c2),(p1,p2) = switchingGate ls.[0] ls.[1] pk
             [c1;c2],[(p1,p2)]
         else
+            let x = System.Math.Log(float n,2.0)
             let (ls1,ls2) = splitList ls 
             let ls1', proofs1 = permNet(ls1,pk) 
             let ls2', proofs2 = permNet(ls2,pk) 
